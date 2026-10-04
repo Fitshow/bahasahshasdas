@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 
-SERVER_NAME = "T1-Redes"
+SERVER_NAME = "Grupo-7"
 BUFFER_SIZE = 4096
 MAX_HEADER_SIZE = 64 * 1024
 MAX_BODY_SIZE = 10 * 1024 * 1024
