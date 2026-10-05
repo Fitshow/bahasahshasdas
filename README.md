@@ -26,6 +26,8 @@ a resposta.
 .
 |-- server.py
 |-- README.md
+|-- tests/
+|   `-- test_server.py
 `-- www/
     |-- index.html
     |-- style.css
@@ -35,7 +37,15 @@ a resposta.
 
 ## Testes
 
-Com o servidor em execução, use outro terminal.
+Para executar a verificação automatizada (ela inicia o servidor em uma porta
+livre e usa somente a biblioteca padrão):
+
+```powershell
+python -m unittest -v
+```
+
+Para os testes manuais abaixo, deixe o servidor em execução e use outro
+terminal.
 
 GET (200):
 
@@ -67,6 +77,7 @@ caminho antes de enviá-lo:
 ```powershell
 curl.exe -v --path-as-is http://127.0.0.1:8080/../../server.py
 curl.exe -v --path-as-is http://127.0.0.1:8080/%2e%2e/%2e%2e/server.py
+curl.exe -v --path-as-is http://127.0.0.1:8080/..%2f..%2fserver.py
 ```
 
 Requisição malformada (400), apenas com a biblioteca padrão do Python:
@@ -91,3 +102,20 @@ abra `http://IP_DO_SERVIDOR:8080/` no outro dispositivo.
 - buffer por conexão, preservando bytes da requisição seguinte;
 - conexões persistentes, `Connection: close`, timeout e concorrência por threads;
 - logs de abertura, requisições, timeout e encerramento de cada conexão.
+
+## Checklist para a entrega e a apresentação
+
+Os testes locais validam a implementação, mas as evidências de rede exigidas
+pelo enunciado devem ser coletadas entre duas máquinas distintas, nunca em
+`localhost`:
+
+- confirmar `ping` entre as duas máquinas e registrar o RTT médio;
+- capturar no Wireshark uma transação GET completa;
+- capturar C1: 10 requisições, cada uma com `Connection: close`;
+- capturar C2: 10 requisições na mesma conexão persistente;
+- salvar as capturas em `capturas/c1.pcapng` e `capturas/c2.pcapng`;
+- registrar handshakes, pacotes, bytes e tempo total de C1 e C2;
+- incluir no relatório a arquitetura, a tabela de conformidade, os três testes
+  de travessia, simultaneidade, comparação C1/C2, overhead, relação com o RTT
+  e conclusão;
+- exportar o relatório final como um único arquivo PDF.
