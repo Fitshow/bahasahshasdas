@@ -1,4 +1,4 @@
-"""Servidor HTTP/1.1 didático implementado diretamente sobre sockets TCP."""
+"""Servidor HTTP/1.1 implementado diretamente sobre sockets TCP."""
 
 import argparse
 import mimetypes
