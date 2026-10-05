@@ -20,6 +20,14 @@ main {
   background: #1d3552;
 }
 
+.mascote {
+  display: block;
+  width: min(100%, 27rem);
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 0.75rem;
+}
+
 #status {
   color: #88d498;
 }

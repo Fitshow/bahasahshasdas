@@ -30,6 +30,7 @@ a resposta.
 |   `-- test_server.py
 `-- www/
     |-- index.html
+    |-- apresentacao.gif
     |-- style.css
     |-- script.js
     `-- teste.txt
@@ -97,7 +98,7 @@ abra `http://IP_DO_SERVIDOR:8080/` no outro dispositivo.
 
 - GET e HEAD, com 200, 400, 403, 404 e 405;
 - `Content-Length`, `Content-Type`, `Date`, `Server` e `Allow` no 405;
-- arquivos HTML, CSS, JavaScript, JSON, texto, PNG, JPEG, PDF e tipo genérico;
+- arquivos HTML, CSS, JavaScript, JSON, texto, GIF, PNG, JPEG, PDF e tipo genérico;
 - percent-decoding e bloqueio de directory traversal pelo caminho real;
 - buffer por conexão, preservando bytes da requisição seguinte;
 - conexões persistentes, `Connection: close`, timeout e concorrência por threads;

@@ -115,6 +115,14 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertEqual(int(headers["content-length"]), len(body))
         self.assertIn(b"style.css", body)
         self.assertIn(b"script.js", body)
+        self.assertIn(b"apresentacao.gif", body)
+
+        status, headers, body = self.exchange(
+            self.request(b"GET", b"/apresentacao.gif")
+        )
+        self.assertEqual(status, "HTTP/1.1 200 OK")
+        self.assertEqual(headers["content-type"], "image/gif")
+        self.assertTrue(body.startswith(b"GIF"))
 
         status, headers, body = self.exchange(
             self.request(b"HEAD", b"/index.html"), expect_body=False

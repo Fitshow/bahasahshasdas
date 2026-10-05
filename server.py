@@ -31,6 +31,7 @@ CONTENT_TYPES = {
     ".json": "application/json; charset=utf-8",
     ".txt": "text/plain; charset=utf-8",
     ".png": "image/png",
+    ".gif": "image/gif",
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",
     ".pdf": "application/pdf",
