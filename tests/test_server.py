@@ -1,5 +1,3 @@
-"""Testes de integração do servidor HTTP/1.1 usando apenas a biblioteca padrão."""
-
 import socket
 import subprocess
 import sys

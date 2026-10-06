@@ -1,5 +1,3 @@
-"""Servidor HTTP/1.1 implementado diretamente sobre sockets TCP."""
-
 import argparse
 import mimetypes
 import os
@@ -46,15 +44,14 @@ print_lock = threading.Lock()
 
 
 class BadRequest(ValueError):
-    """Indica que a requisição recebida não tem uma estrutura HTTP válida."""
+    pass
 
 
 class ForbiddenPath(ValueError):
-    """Indica que o caminho resolvido sairia do diretório publicado."""
+    pass
 
 
 def log(message):
-    """Evita que mensagens de threads diferentes se misturem no terminal."""
     with print_lock:
         print(message, flush=True)
 
@@ -78,7 +75,6 @@ def parse_arguments():
 
 
 def parse_request(header_bytes):
-    """Analisa manualmente a linha inicial e os headers de uma requisição."""
     try:
         text = header_bytes.decode("iso-8859-1")
     except UnicodeDecodeError as exc:
@@ -88,8 +84,6 @@ def parse_request(header_bytes):
     if not lines or not lines[0]:
         raise BadRequest("request line ausente")
 
-    # A request line HTTP usa SP entre seus três componentes. split(" ")
-    # também faz espaços repetidos serem percebidos como erro estrutural.
     request_parts = lines[0].split(" ")
     if len(request_parts) != 3 or not all(request_parts):
         raise BadRequest("request line deve ter exatamente três partes")
@@ -144,7 +138,6 @@ def parse_request(header_bytes):
 
 
 def resolve_requested_path(root, target):
-    """Decodifica e resolve a URL, garantindo que ela permaneça dentro de root."""
     url_path = target.split("?", 1)[0]
     try:
         decoded_path = unquote(url_path, encoding="utf-8", errors="strict")
@@ -156,8 +149,6 @@ def resolve_requested_path(root, target):
     if decoded_path == "/":
         decoded_path = "/index.html"
 
-    # A barra invertida também separa diretórios no Windows. realpath resolve
-    # '..', links simbólicos e diferenças de representação do mesmo caminho.
     relative_path = decoded_path.lstrip("/\\")
     candidate = os.path.realpath(os.path.join(root, relative_path))
     try:
@@ -190,7 +181,6 @@ def error_body(status_code):
 
 def build_response(status_code, body, content_type, close_connection=False,
                    extra_headers=None, include_body=True):
-    """Monta status line, headers e corpo usando CRLF, sem biblioteca HTTP."""
     reason = STATUS_TEXT[status_code]
     headers = [
         f"HTTP/1.1 {status_code} {reason}",
@@ -208,7 +198,6 @@ def build_response(status_code, body, content_type, close_connection=False,
 
 
 def response_for_request(method, target, root, close_connection):
-    """Produz a resposta e devolve também o status usado no log."""
     include_body = method != "HEAD"
 
     if method not in ("GET", "HEAD"):
@@ -260,7 +249,6 @@ def response_for_request(method, target, root, close_connection):
             close_connection, include_body=include_body
         ), status_code
     except OSError:
-        # O arquivo pode ter sido removido entre isfile() e open().
         status_code = 404
         body = error_body(status_code)
         return build_response(
@@ -294,7 +282,6 @@ def receive_more(client_socket, buffer):
 
 
 def handle_client(client_socket, client_address, root):
-    """Atende todas as requisições recebidas em uma conexão TCP."""
     client_id = f"{client_address[0]}:{client_address[1]}"
     log(f"[{client_id}] conexão aberta")
     buffer = b""
@@ -332,8 +319,6 @@ def handle_client(client_socket, client_address, root):
                     log(f"[{client_id}] requisição inválida -> 400 Bad Request")
                     return
 
-                # Consumir o corpo mantém a delimitação correta da próxima
-                # requisição, mesmo para um método que resultará em 405.
                 while len(buffer) < content_length:
                     new_buffer = receive_more(client_socket, buffer)
                     if new_buffer is None:
